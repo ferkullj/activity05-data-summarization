@@ -25,7 +25,7 @@ We read in the same data from Activity 4 below, but notice that this code is now
 Compare this code output to the `load_data` chunk in your knitted Activity 4 `.md` report.
 What does enclosing an assignment code (i.e., `object_name <- r_code`) in parentheses do?
 
-**Response**:
+**Response**: The parenthesis make the whole data set appear in the this panel
 
 
 ### Data Codebook
@@ -79,6 +79,12 @@ There are a number of ways to create a code chunk:
 Below, create a code chunk and name it `median_earnings`.
 Make sure there is an empty line above and below the code chunk.
 
+```{r median_earnings}
+
+college_recent_grads %>%
+  summarise(median_all_majors = median(median))
+
+```
 
 
 In your newly created R code chunk, verify that the median income for all majors was $36,000.
@@ -95,12 +101,26 @@ Be careful when you name your output summaries as we are dealing with things tha
 When I and obtaining numerical summaries for variables, I like to include the variable name in my summary name (e.g., `mean_med_earnings = mean(median)`).
 Create a code chunk and name it `summary_earnings`.
 
+```{r summary_earnings}
+
+college_recent_grads %>%
+  summarise(
+    sample_size = n(),
+    mean_med_earnings = mean(median),
+    sd_med_earnings = sd(median),
+    min_med_earnings = min(median),
+    median_med_earnings = median(median),
+    max_med_earnings = max(median)
+  )
+
+```
+
 
 
 Provide a discussion on what you believe the distribution of median earnings will look like.
 You should discuss the center, spread, and potential shape only using these values - I do NOT want to see any data visualizations here.
 
-**Response**:
+**Response**: Since the mean is much larger than the median for the median variable, this distribution is likely right skewed. The min is within 2 SDs and the max is not even within 3 SDs. I'm guessing most observations would be within 1 SD and that there are some outliers near the max earnings.
 
 
 ### Median Earnings by Major Category
@@ -110,12 +130,29 @@ Using the `college_recent_grads` dataset and functions from `{dplyr}`, obtain si
 *Arrange* this summary table by the median earning.
 Create a code chunk and name it `major_earnings`.
 
+```{r major_earnings}
+
+knit_ex <- college_recent_grads %>%
+  group_by(major_category) %>%
+  summarise(
+    sample_size = n(),
+    mean_med_earnings = mean(median),
+    sd_med_earnings = sd(median),
+    min_med_earnings = min(median),
+    median_med_earnings = median(median),
+    max_med_earnings = max(median)
+  ) %>%
+  arrange(desc(median_med_earnings))
+
+knitr::kable(knit_ex)
+```
+
 
 
 Provide a discussion on how each major compares to the overall distribution.
 You should discuss the center, spread, and potential shape only using these summary values - I do NOT want to see any data visualizations here.
 
-**Response**:
+**Response**: More majors seem to fall under the overall median rather than over the overall median. This would make sense if the overall median distribution was right skewed. Looking at the engineering distribution, there is clearly at least 1 outlier that would skew that distribution right as well. The mean is also slightly higher than the median as well.
 
 
 Before we continue, add the following to the end of your pipeline (you will need to pipe first) in your `major_earnings` code chunk:
@@ -129,7 +166,7 @@ What changes about the output?
 When would this `knitr::kable` code be useful?
 
 **Response**:
-
+Using knitr::kable() with the new dataset I just made 'prints' the newly created data set as output. This would be useful if we wanted to visualize our new data set.
 
 ![](README-img/noun_pause.png) **Planned Pause Point**: If you have any questions, contact your instructor. Otherwise feel free to continue on.
 
@@ -138,6 +175,10 @@ When would this `knitr::kable` code be useful?
 Let us see how well your descriptions in the [Median Earnings by Major Category](#median-earnings-by-major-category) section compare to the actual distributions.
 Plot the distribution of the variable `median` earnings of full-time, year-round workers for each `major_category` using the *boxplot* and *jitter* geometries.
 Create a code chunk and name it `major_boxplot`.
+
+```{r major_boxplot}
+
+```
 
 
 
