@@ -152,7 +152,7 @@ knitr::kable(knit_ex)
 Provide a discussion on how each major compares to the overall distribution.
 You should discuss the center, spread, and potential shape only using these summary values - I do NOT want to see any data visualizations here.
 
-**Response**: More majors seem to fall under the overall median rather than over the overall median. This would make sense if the overall median distribution was right skewed. Looking at the engineering distribution, there is clearly at least 1 outlier that would skew that distribution right as well. The mean is also slightly higher than the median as well.
+**Response**: More majors seem to fall under the overall median rather than over the overall median. This would make sense if the overall median distribution was right skewed. Looking at the engineering distribution, there is clearly at least 1 outlier that would skew that distribution right as well. The mean is also slightly higher than the median.
 
 
 Before we continue, add the following to the end of your pipeline (you will need to pipe first) in your `major_earnings` code chunk:
@@ -178,6 +178,15 @@ Create a code chunk and name it `major_boxplot`.
 
 ```{r major_boxplot}
 
+college_recent_grads %>%
+  group_by(major_category) %>%
+  summarise(
+    median_med_earnings = median(median)
+    ) %>% 
+  ggplot() +
+  geom_boxplot(aes(x = major_category, y = median_med_earnings, color = major_category)) +
+  geom_jitter(aes(x= major_category, y = median_med_earnings))
+
 ```
 
 
@@ -201,6 +210,22 @@ In this code chunk,
 3. Assign/create a *rank* for each summarized value (rank for `total`, rank for `sharewomen`, etc.) and provide a meaningful name to each ranked column value.
 4. Arrange the results so that `major_category` appear in alphabetical order ("A" at the top).
 
+```{r category_rankings}
+
+college_recent_grads %>%
+  group_by(major_category) %>%
+  summarise(
+    total_majors = sum(total),
+    med_sharewomen = median(sharewomen),
+    med_unemployment_rate = median(unemployment_rate)) %>% 
+  mutate(
+    total_rank = rank(total_majors),
+    sharewomen_rank = rank(med_sharewomen),
+    unemployment_rank = rank(med_unemployment_rate)) %>% 
+  arrange(major_category)
+  
+
+```
 
 
 Provide a discussion on how the `major_category` rankings compare.

@@ -225,7 +225,7 @@ than over the overall median. This would make sense if the overall
 median distribution was right skewed. Looking at the engineering
 distribution, there is clearly at least 1 outlier that would skew that
 distribution right as well. The mean is also slightly higher than the
-median as well.
+median.
 
 Before we continue, add the following to the end of your pipeline (you
 will need to pipe first) in your `major_earnings` code chunk:
@@ -250,6 +250,19 @@ actual distributions. Plot the distribution of the variable `median`
 earnings of full-time, year-round workers for each `major_category`
 using the *boxplot* and *jitter* geometries. Create a code chunk and
 name it `major_boxplot`.
+
+``` r
+college_recent_grads %>%
+  group_by(major_category) %>%
+  summarise(
+    median_med_earnings = median(median)
+    ) %>% 
+  ggplot() +
+  geom_boxplot(aes(x = major_category, y = median_med_earnings, color = major_category)) +
+  geom_jitter(aes(x= major_category, y = median_med_earnings))
+```
+
+![](activity05-data-summarization_files/figure-gfm/major_boxplot-1.png)<!-- -->
 
 Provide a discussion on how your descriptions in the Median Earnings by
 Major Category section compares.
@@ -276,6 +289,41 @@ code chunk,
     ranked column value.
 4.  Arrange the results so that `major_category` appear in alphabetical
     order (“A” at the top).
+
+``` r
+college_recent_grads %>%
+  group_by(major_category) %>%
+  summarise(
+    total_majors = sum(total),
+    med_sharewomen = median(sharewomen),
+    med_unemployment_rate = median(unemployment_rate)) %>% 
+  mutate(
+    total_rank = rank(total_majors),
+    sharewomen_rank = rank(med_sharewomen),
+    unemployment_rank = rank(med_unemployment_rate)) %>% 
+  arrange(major_category)
+```
+
+    ## # A tibble: 16 x 7
+    ##    major_category       total_majors med_sharewomen med_unemployment… total_rank
+    ##    <chr>                       <dbl>          <dbl>             <dbl>      <dbl>
+    ##  1 Agriculture & Natur…           NA         NA                0.0553         16
+    ##  2 Arts                       357130          0.667            0.0895          6
+    ##  3 Biology & Life Scie…       453862          0.583            0.0680          8
+    ##  4 Business                  1302376          0.441            0.0697         15
+    ##  5 Communications & Jo…       392601          0.672            0.0722          7
+    ##  6 Computers & Mathema…       299008          0.269            0.0908          5
+    ##  7 Education                  559129          0.769            0.0488         13
+    ##  8 Engineering                537583          0.227            0.0598         12
+    ##  9 Health                     463230          0.783            0.0643          9
+    ## 10 Humanities & Libera…       713468          0.690            0.0817         14
+    ## 11 Industrial Arts & C…       229792          0.232            0.0557          4
+    ## 12 Interdisciplinary           12296          0.771            0.0709          1
+    ## 13 Law & Public Policy        179107          0.476            0.0825          2
+    ## 14 Physical Sciences          185479          0.520            0.0511          3
+    ## 15 Psychology & Social…       481007          0.799            0.0651         10
+    ## 16 Social Science             529966          0.543            0.0972         11
+    ## # … with 2 more variables: sharewomen_rank <dbl>, unemployment_rank <dbl>
 
 Provide a discussion on how the `major_category` rankings compare.
 
